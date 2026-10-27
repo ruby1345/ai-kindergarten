@@ -56,6 +56,7 @@
     if (locked) return;
     locked = true;
     blankEl.textContent = word;
+    if (global.App && App.Speak) App.Speak.say("我想要一个会帮我" + word + "的机器");
     App.$all("#s4-cards .word-card").forEach(function (c) {
       c.classList.toggle("is-picked", c === card);
     });

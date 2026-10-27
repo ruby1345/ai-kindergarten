@@ -130,9 +130,81 @@
     };
   }
 
+  /* ---------- TTS 中文朗读（3-4 岁识字前的关键辅助） ---------- */
+  // 用浏览器内置 speechSynthesis 朗读中文文本，无需外部件。点文字选项即出声。
+  var Speak = (function () {
+    var enabled = true;      // 默认开启；跟随音效开关联动
+    var zhVoiceReady = false;
+
+    function pickVoice() {
+      var vs = global.speechSynthesis && global.speechSynthesis.getVoices();
+      if (!vs || !vs.length) return null;
+      var fallback = null;
+      for (var i = 0; i < vs.length; i++) {
+        var lan = (vs[i].lang || "").toLowerCase();
+        if (lan.indexOf("zh") === 0) {
+          fallback = vs[i];
+          if (/中国|China|tem-hui|ting-ting|普通话/.test(vs[i].name + " " + vs[i].voiceURI)) return vs[i];
+        }
+      }
+      return fallback;
+    }
+    function pickZhVoice() { return pickVoice(); }
+
+    // 去掉 emoji 与装饰符号，保留中文/数字/常用标点
+    function toSpeakText(t) {
+      var s = String(t == null ? "" : t);
+      s = s.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, "");             // 双字节 emoji
+      s = s.replace(/[\u2600-\u27BF\u2B00-\u2BFF\uFE0F\u2300-\u23FF]/g, ""); // 单字节 emoji
+      s = s.replace(/\s+/g, " ").trim();
+      return s;
+    }
+
+    function say(text) {
+      if (!enabled || !global.speechSynthesis) return;
+      var s = toSpeakText(text);
+      if (!s) return;
+      var u = new SpeechSynthesisUtterance(s);
+      u.lang = "zh-CN";
+      u.rate = 0.82;          // 放慢，适合幼儿
+      u.pitch = 1.12;         // 稍高，更像"小创"的声音
+      u.volume = 1;
+      var v = pickVoice();
+      if (v) u.voice = v;
+      global.speechSynthesis.cancel(); // 打断上一次
+      global.speechSynthesis.speak(u);
+    }
+    function stop() { if (global.speechSynthesis) global.speechSynthesis.cancel(); }
+
+    // voices 异步加载，语音列表就绪后重取一次
+    function init() {
+      if (!global.speechSynthesis) return;
+      var ensure = function () { zhVoiceReady = true; };
+      if (global.speechSynthesis.getVoices().length) ensure();
+      global.speechSynthesis.addEventListener("voiceschanged", ensure, { once: false });
+    }
+    init();
+
+    return {
+      say: say,
+      stop: stop,
+      pickVoice: pickVoice,
+      isEnabled: function () { return enabled; },
+      setEnabled: function (v) { enabled = v; if (!v) stop(); }
+    };
+  })();
+
+  // 音效开关与 TTS 联动：音效开启时朗读也可用
+  var _soundSet = Sound.setEnabled;
+  Sound.setEnabled = function (v) {
+    _soundSet.call(Sound, v);
+    Speak.setEnabled(v);
+  };
+
   global.App = global.App || {};
   global.App.onTap = onTap;
   global.App.Sound = Sound;
+  global.App.Speak = Speak;
   global.App.$ = $;
   global.App.$all = $all;
   global.App.showEl = showEl;
@@ -141,4 +213,20 @@
 
   // 首次任意触摸解锁音频（iOS/Android 需要用户手势）
   document.addEventListener("pointerdown", function () { Sound.unlock(); }, { once: false });
+
+  // 全局：所有文字选项一碰即朗读——3-4 岁孩子不识字也能听懂词汇
+  document.addEventListener("pointerup", function (e) {
+    var el = e.target;
+    if (!el || !el.closest) return;
+    var opt = el.closest(".qa-opt, .word-card, .treasure-card, .wish-pick-btn, .kw-badge, .speak, .polite-card, .greet-card, .hello-card");
+    if (!opt) return;
+    // 优先读 data-speak / data-w，其次子元素 .tc-word，最后取可见文本
+    var w = opt.getAttribute("data-speak") || opt.getAttribute("data-w");
+    if (!w && opt.querySelector) {
+      var tw = opt.querySelector(".tc-word, .pw-word, .hv-word, .pt-word");
+      if (tw) w = tw.textContent;
+    }
+    if (!w) w = opt.textContent;
+    if (w) App.Speak.say(w);
+  });
 })(window);

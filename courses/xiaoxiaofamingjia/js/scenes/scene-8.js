@@ -29,6 +29,8 @@
     qEl.textContent = it.q;
     openinEl.placeholder = it.open;
     optsEl.innerHTML = "";
+    // 3-4 岁不识字：进入题目自动朗读题干
+    if (App.Speak) App.Speak.say(it.q);
     it.opts.forEach(function (o, i) {
       var b = document.createElement("button");
       b.className = "qa-opt";

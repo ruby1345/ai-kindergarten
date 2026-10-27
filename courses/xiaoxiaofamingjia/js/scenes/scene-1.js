@@ -20,6 +20,7 @@
   // 第一步 → 第二步：认识小创
   App.onTap(App.$("#s1-go1"), function () {
     App.Sound.ding();
+    if (App.Speak) App.Speak.say("你好，我是机器人小创");
     setStep(2);
   });
 
