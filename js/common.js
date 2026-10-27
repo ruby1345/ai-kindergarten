@@ -131,23 +131,36 @@
   }
 
   /* ---------- TTS 中文朗读（3-4 岁识字前的关键辅助） ---------- */
-  // 用浏览器内置 speechSynthesis 朗读中文文本，无需外部件。点文字选项即出声。
+  // 用浏览器内置 speechSynthesis 朗读中文文本。点文字选项即出声。
+  // 真人感优化：按音色真人度评分选voice，配合自然语速/音调/断句，短词扩充为柔和短语。
   var Speak = (function () {
     var enabled = true;      // 默认开启；跟随音效开关联动
     var zhVoiceReady = false;
 
+    // 真人/温柔音色关键词，权重从高到低
+    var WARM = ["siri", "neural", "enhanced", "azure", "wavenet", "standard-zh-cn-", "premium", "natural", "ting", "meijia", "mei-jia", "sinji", "sin-ji", "jiajia", "普通话", "mandarin", "中国", "china", "voice 1", "简体", "大陆"];
+    // 明显机械/生硬的音色标记，命中则降低优先级
+    var ROBOT = ["compact", "basic", "legacy", "prem_standard", "hmm"];
+
+    function voiceScore(v) {
+      var hay = (v.name + " " + v.voiceURI).toLowerCase();
+      var score = 0;
+      for (var i = 0; i < WARM.length; i++) { if (hay.indexOf(WARM[i].toLowerCase()) !== -1) score += 100 - i * 4; }
+      for (var j = 0; j < ROBOT.length; j++) { if (hay.indexOf(ROBOT[j].toLowerCase()) !== -1) score -= 40; }
+      return score;
+    }
+
     function pickVoice() {
       var vs = global.speechSynthesis && global.speechSynthesis.getVoices();
       if (!vs || !vs.length) return null;
-      var fallback = null;
+      var best = null, bestScore = -Infinity;
       for (var i = 0; i < vs.length; i++) {
         var lan = (vs[i].lang || "").toLowerCase();
-        if (lan.indexOf("zh") === 0) {
-          fallback = vs[i];
-          if (/中国|China|tem-hui|ting-ting|普通话/.test(vs[i].name + " " + vs[i].voiceURI)) return vs[i];
-        }
+        if (lan.indexOf("zh") !== 0) continue;
+        var sc = voiceScore(vs[i]);
+        if (sc > bestScore) { bestScore = sc; best = vs[i]; }
       }
-      return fallback;
+      return best;
     }
     function pickZhVoice() { return pickVoice(); }
 
@@ -160,21 +173,71 @@
       return s;
     }
 
+    // 真人语音：由课程注入的 { "文本": "文件名" } 表（edge-tts 神经语音预生成）
+    var audioMap = null;   // 文本→文件名
+    var audioBase = "";    // 播放目录相对页面
+    var audioEls = {};     // 播放缓存
+
+    function setAudioMap(map, base) {
+      if (!map) return;
+      audioMap = {};
+      for (var k in map) if (map.hasOwnProperty(k)) audioMap[k] = map[k];
+      audioBase = base || "";
+    }
+    // 播放首个可用 <audio>；返回是否已播放真人语音
+    function playReal(text) {
+      var t = toSpeakText(text);
+      if (!audioMap || !audioMap[t]) return false;
+      var el = audioEls[t];
+      if (!el) {
+        el = new Audio();
+        el.preload = "auto";
+        el.src = audioBase + audioMap[t];
+        audioEls[t] = el;
+      }
+      // 打断上次真人语音
+      for (var k in audioEls) { try { audioEls[k].pause(); audioEls[k].currentTime = 0; } catch (e) {} }
+      try { el.play(); return true; } catch (e) { return false; }
+    }
+
+    // 短词/短语朗读时自然化成柔和句子，避免一个字一个字机械蹦出
+    function naturalize(w) {
+      var s = toSpeakText(w);
+      if (!s) return "";
+      var v = /^[\u4e00-\u9fa5]+$/.test(s) && s.length <= 6; // 纯中文短词
+      if (!v) return s;
+      if (/^(你好|谢谢|再见|真棒|有礼貌|早上好|下午好|请帮我)$/.test(s)) return s + "。";
+      // 常见动作词 → 柔和请求
+      if (/(拿|浇|收拾|扫地|开|讲|陪|放|喂|找|画|做|唱|收|关)/.test(s)) return "请帮我" + s + "，好不好？";
+      return s + "。";
+    }
+
     function say(text) {
-      if (!enabled || !global.speechSynthesis) return;
-      var s = toSpeakText(text);
+      if (!enabled) return;
+      var raw = String(text == null ? "" : text);
+      var s = toSpeakText(raw);
       if (!s) return;
-      var u = new SpeechSynthesisUtterance(s);
+      // 1) 优先真人语音
+      if (playReal(s)) return;
+      // 2) 回退浏览器TTS（动态内容如幼儿名字，或未预生成文本）
+      if (!global.speechSynthesis) return;
+      var ss = naturalize(raw);
+      if (!ss) return;
+      var u = new SpeechSynthesisUtterance(ss);
       u.lang = "zh-CN";
-      u.rate = 0.82;          // 放慢，适合幼儿
-      u.pitch = 1.12;         // 稍高，更像"小创"的声音
+      u.rate = 0.78;
+      u.pitch = 1.06;
       u.volume = 1;
+      u.text = ss;
       var v = pickVoice();
       if (v) u.voice = v;
-      global.speechSynthesis.cancel(); // 打断上一次
+      global.speechSynthesis.cancel();
       global.speechSynthesis.speak(u);
     }
-    function stop() { if (global.speechSynthesis) global.speechSynthesis.cancel(); }
+    function stop() {
+      for (var k in audioEls) { try { audioEls[k].pause(); audioEls[k].currentTime = 0; } catch (e) {} }
+      if (global.speechSynthesis) global.speechSynthesis.cancel();
+    }
 
     // voices 异步加载，语音列表就绪后重取一次
     function init() {
@@ -189,6 +252,7 @@
       say: say,
       stop: stop,
       pickVoice: pickVoice,
+      setAudioMap: setAudioMap,
       isEnabled: function () { return enabled; },
       setEnabled: function (v) { enabled = v; if (!v) stop(); }
     };
