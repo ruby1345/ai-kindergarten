@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>小小发明家 · 互动课件</title>
+<link rel="stylesheet" href="../../css/base.css?v=36">
+<link rel="stylesheet" href="../../css/classroom.css?v=36">
+</head>
+<body class="cc-body">
+
+<!-- ============ 顶部条：返回 / 进度 / 音效 ============ -->
+<header class="cc-topbar">
+  <a class="cc-iconbtn" href="index.html" aria-label="返回课程首页" title="返回课程首页">🏠</a>
+  <div class="cc-progress" id="ccProgress" role="tablist" aria-label="环节切换"></div>
+  <button class="cc-iconbtn" id="ccSound" aria-label="音效开关" title="音效开关">🔊</button>
+</header>
+
+<!-- ============ 场景舞台 ============ -->
+<main class="cc-stage" id="ccStage">
+
+  <!-- ── 场景 1 · 开场热身 ── -->
+  <section class="scene is-active" data-scene="1" id="scene-1" aria-label="开场热身">
+    <div class="bg-stars" aria-hidden="true"></div>
+    <div class="scene-inner scene-1">
+      <div class="step-dots" id="s1-steps" aria-hidden="true">
+        <span class="step-dot is-cur"></span>
+        <span class="step-dot"></span>
+        <span class="step-dot"></span>
+      </div>
+
+      <!-- 第一步 · 小创自我介绍 -->
+      <div class="intro-step" id="s1-step1">
+        <div class="robot-wrap robot-wrap--lg">
+          <svg viewBox="0 0 200 200" width="100%" height="100%">
+            <use href="../../svg/xiaochuang.svg#xc-waving"></use>
+          </svg>
+        </div>
+        <h2 class="intro-title">嗨！我是小创 👋</h2>
+        <p class="intro-text">我是一个会听指令、会帮忙的<strong>智能机器人</strong>朋友！今天，我们要一起当——小小发明家！</p>
+        <button class="btn btn--coral btn--lg" id="s1-go1">▶ 认识我啦</button>
+      </div>
+
+      <!-- 第二步 · 今天学什么 -->
+      <div class="intro-step is-hidden" id="s1-step2">
+        <div class="topic-card">
+          <p class="topic-main">🤖 小小发明家</p>
+          <p class="topic-sub">畅想未来智能</p>
+        </div>
+        <h2 class="intro-title">今天我们要学…</h2>
+        <p class="intro-text">想一想：你想要一个会帮你<strong>做什么</strong>的机器？今天我们要从「用 AI」变成「创造 AI 想法」！</p>
+        <button class="btn btn--coral btn--lg" id="s1-go2">▶ 我知道啦</button>
+      </div>
+
+      <!-- 第三步 · 热身小游戏 -->
+      <div class="intro-step is-hidden" id="s1-step3">
+        <h2 class="intro-title">🎈 热身小游戏 · 我的愿望机器</h2>
+        <p class="intro-text">点一点，你最想要哪个机器来帮你？</p>
+        <div class="wish-pick" id="s1-wishes">
+          <button class="wish-pick-btn" data-wish="拿玩具">🧸 会帮我拿玩具</button>
+          <button class="wish-pick-btn" data-wish="浇花">🌸 会帮我浇花</button>
+          <button class="wish-pick-btn" data-wish="唱歌">🎵 会陪我唱歌</button>
+        </div>
+        <div class="praise is-hidden" id="s1-praise">太棒了！我们出发吧！</div>
+      </div>
+
+      <p class="scene-hint">👆 点一点，跟着小创一步步开始吧！</p>
+    </div>
+  </section>
+
+  <!-- ── 场景 2 · 动画观影 ── -->
+  <section class="scene" data-scene="9" id="scene-9" aria-label="动画观影">
+    <div class="scene-inner scene-9">
+      <h2 class="scene-title">🎬 动画观影 · 小创的冒险</h2>
+      <div class="video-box" id="s9-box">
+        <video id="s9-video" preload="metadata" playsinline></video>
+        <div class="video-mask" id="s9-mask">
+          <button class="btn btn--coral btn--lg" id="s9-play">▶ 开始看动画</button>
+        </div>
+        <div class="video-progress" id="s9-progress" aria-hidden="true"></div>
+        <div class="video-chapter" id="s9-chapter" aria-hidden="true">第 1 集</div>
+        <div class="video-eps" id="s9-eps" role="tablist" aria-label="视频选集"></div>
+      </div>
+      <button class="btn btn--coral btn--lg is-hidden" id="s9-next">▶ 看下一集</button>
+      <p class="scene-hint" id="s9-hint">👆 每集看完，点「看下一集」继续，给小创讲讲这集说了什么吧！</p>
+    </div>
+  </section>
+
+  <!-- ── 场景 3 · 提问互动 ── -->
+  <section class="scene" data-scene="8" id="scene-8" aria-label="提问互动">
+    <div class="scene-inner scene-8">
+      <h2 class="scene-title">🎤 提问互动 · 小创问你来答</h2>
+      <div class="qa-progress">
+        <span class="qa-count" id="s8-count">第 1 / 5 题</span>
+        <div class="qa-bar"><i id="s8-bar"></i></div>
+      </div>
+      <div class="qa-tag" id="s8-tag">🎬 第 1 集 · 自我介绍</div>
+      <div class="qa-card" id="s8-card">
+        <p class="qa-q" id="s8-q"></p>
+        <div class="qa-opts" id="s8-opts"></div>
+        <div class="qa-open">
+          <input class="name-input" id="s8-openin" type="text" maxlength="12" placeholder="再说说你的奇思妙想…" aria-label="自由想象">
+          <button class="btn btn--coral" id="s8-openbtn">🌟 说给大家听</button>
+        </div>
+      </div>
+      <div class="qa-done is-hidden" id="s8-done">
+        <div class="qa-done-badge">🏅</div>
+        <p class="qa-done-text">全部答完啦！我们是小小发明家！</p>
+        <p class="qa-done-sub">把小脑袋里的奇思妙想，都装进发明里吧</p>
+      </div>
+      <p class="scene-hint" id="s8-hint">👆 点一点答案，再说说你的想法吧！</p>
+    </div>
+  </section>
+
+  <!-- ── 场景 4 · 我想要…发明游戏 ── -->
+  <section class="scene" data-scene="4" id="scene-4" aria-label="发明游戏">
+    <div class="scene-inner scene-4">
+      <div class="round-badge" id="s4-rounds">第 1 轮</div>
+      <div class="stars" id="s4-stars"><span class="star">☆</span><span class="star">☆</span><span class="star">☆</span></div>
+      <div class="wish-frame">
+        <p class="wish-text">我想要一个会帮我 <span class="wish-blank" id="s4-blank">____</span> 的机器！</p>
+      </div>
+      <div class="word-cards" id="s4-cards"></div>
+      <div class="wish-actions">
+        <button class="btn btn--ghost btn--sm" id="s4-reset">🔄 再来一轮</button>
+      </div>
+      <div class="robot-wrap robot-wrap--sm">
+        <svg viewBox="0 0 200 200" width="100%" height="100%">
+          <use href="../../svg/xiaochuang.svg#xc-clap"></use>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 场景 5 · 发明创作·灵感墙 ── -->
+  <section class="scene" data-scene="5" id="scene-5" aria-label="发明创作">
+    <div class="scene-inner scene-5">
+      <h2 class="scene-title">魔法百宝箱 · 翻出你的发明灵感</h2>
+      <p class="scene-hint">👆 翻开宝箱卡片，看看有什么惊喜</p>
+      <div class="treasure-box" id="s5-box" aria-label="魔法百宝箱"></div>
+      <div class="idea-card" id="s5-idea">会飞</div>
+      <div class="invent-name">
+        <input class="name-input name-input--sm" id="s5-name" type="text" maxlength="6" placeholder="我的发明叫…" aria-label="发明名字">
+        <button class="btn btn--coral" id="s5-save">📌 贴上灵感墙</button>
+      </div>
+      <div class="invent-wall" id="s5-wall"></div>
+      <div class="robot-wrap robot-wrap--sm robot-wrap--corner">
+        <svg viewBox="0 0 200 200" width="100%" height="100%">
+          <use href="../../svg/xiaochuang.svg#xc-curious"></use>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 场景 6 · 分享展示·发明勋章 ── -->
+  <section class="scene" data-scene="6" id="scene-6" aria-label="分享展示">
+    <div class="scene-inner scene-6">
+      <h2 class="scene-title">发明勋章 · 颁奖台</h2>
+      <div class="medal-stage" id="s6-stage">
+        <div class="medal-rays" id="s6-rays" aria-hidden="true"></div>
+        <div class="medal-medal" id="s6-medal">
+          <svg viewBox="0 0 120 160" width="100%" height="100%" aria-hidden="true">
+            <circle cx="60" cy="60" r="52" fill="#FFD97A" stroke="#E9B93F" stroke-width="6"/>
+            <circle cx="60" cy="60" r="38" fill="#FFF6DC"/>
+            <path d="M60 36 L66 54 L85 54 L70 66 L76 84 L60 73 L44 84 L50 66 L35 54 L54 54 Z" fill="#FF9E80"/>
+            <rect x="44" y="112" width="32" height="14" rx="6" fill="#FF7A5C"/>
+            <rect x="38" y="126" width="44" height="10" rx="5" fill="#FFD97A"/>
+            <rect x="32" y="136" width="56" height="10" rx="5" fill="#FFD97A"/>
+          </svg>
+        </div>
+        <div class="medal-name" id="s6-awardee">发明家 1 号</div>
+      </div>
+      <input class="name-input" id="s6-name" type="text" maxlength="8" placeholder="输入名字（可留空）" aria-label="发明家名字">
+      <button class="btn btn--coral btn--lg" id="s6-award">🎖 颁发勋章</button>
+      <div class="honor-wall" id="s6-wall"><span class="wall-title">发明家荣誉墙</span></div>
+    </div>
+  </section>
+
+  <!-- ── 场景 7 · 总结再见 ── -->
+  <section class="scene" data-scene="7" id="scene-7" aria-label="总结再见">
+    <div class="scene-inner scene-7">
+      <div class="kw-carousel">
+        <span class="kw-badge" id="s7-kw1">指令</span>
+        <span class="kw-badge" id="s7-kw2">想象</span>
+        <span class="kw-badge" id="s7-kw3">发明</span>
+        <span class="kw-badge" id="s7-kw4">分享</span>
+      </div>
+      <div class="lyric" id="s7-lyric">
+        <span class="lyr lyr-1">想一想</span>
+        <span class="lyr lyr-2">说一说</span>
+        <span class="lyr lyr-3">画一画</span>
+        <span class="lyr lyr-4">我就是小小发明家！</span>
+      </div>
+      <div class="robot-wrap robot-wrap--md">
+        <svg viewBox="0 0 200 200" width="100%" height="100%">
+          <use href="../../svg/xiaochuang.svg#xc-waving"></use>
+        </svg>
+      </div>
+      <p class="scene-hint">👆 点一点屏幕，撒彩带说再见</p>
+      <div class="confetti-layer" id="s7-confetti" aria-hidden="true"></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ 教师辅助条 ============ -->
+<div class="cc-teacherbar" id="ccTeacher">
+  <button class="teacherbar-toggle" id="teacherbarToggle" aria-label="展开教师提示">👩‍🏫</button>
+  <div class="teacherbar-body" id="teacherbarBody">
+    <div class="teacherbar-title" id="tbTitle">环节 1 · 开场热身</div>
+    <p class="teacherbar-goal" id="tbGoal"></p>
+    <p class="teacherbar-script" id="tbScript"></p>
+  </div>
+</div>
+
+<!-- ============ 底部大按钮 ============ -->
+<nav class="cc-controls" aria-label="课件控制">
+  <button class="btn btn--ghost" id="ccPrev">◀ 上一环节</button>
+  <button class="btn btn--butter" id="ccReplay">↻ 重播</button>
+  <button class="btn btn--coral" id="ccNext">下一环节 ▶</button>
+</nav>
+
+<!-- 全屏提示浮层 -->
+<div class="cc-toast" id="ccToast" aria-hidden="true"></div>
+
+<script src="../../js/common.js?v=36"></script>
+<script src="js/classroom.js?v=36"></script>
+<script src="js/scenes/scene-8.js?v=36"></script>
+<script src="js/scenes/scene-9.js?v=36"></script>
+<script src="js/scenes/scene-1.js?v=36"></script>
+<script src="js/scenes/scene-4.js?v=36"></script>
+<script src="js/scenes/scene-5.js?v=36"></script>
+<script src="js/scenes/scene-6.js?v=36"></script>
+<script src="js/scenes/scene-7.js?v=36"></script>
+</body>
+</html>

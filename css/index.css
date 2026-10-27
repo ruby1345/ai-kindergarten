@@ -1,0 +1,103 @@
+/* ============================================================
+   index.css — 课程平台首页
+   ============================================================ */
+
+/* ---------- Hero ---------- */
+.hero { padding: clamp(44px, 8vw, 90px) 0 clamp(30px, 5vw, 54px); }
+.hero-inner {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: clamp(28px, 5vw, 60px);
+  align-items: center;
+}
+.hero-copy { display: flex; flex-direction: column; gap: 20px; align-items: flex-start; }
+.hero-actions { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
+
+.hero-mascot { position: relative; min-height: 300px; }
+.mascot-robot {
+  width: clamp(220px, 30vw, 330px);
+  display: block;
+  margin: 0 auto;
+  filter: drop-shadow(0 14px 24px rgba(82, 191, 160, 0.35));
+  animation: floatY 3.8s ease-in-out infinite;
+}
+.deco { position: absolute; width: clamp(34px, 4vw, 54px); height: clamp(34px, 4vw, 54px); }
+.deco--star1 { top: 6%; left: 12%; animation: floatY 3s ease-in-out infinite; }
+.deco--star2 { bottom: 22%; right: 10%; animation: floatY 2.6s ease-in-out 0.4s infinite; }
+.deco--gear { top: 18%; right: 16%; animation: wobble 4s ease-in-out infinite; }
+
+.speech-bubble {
+  position: absolute;
+  bottom: 4%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  border: 3px solid var(--butter-deep);
+  border-radius: 24px 24px 24px 6px;
+  padding: 12px 20px;
+  font-family: var(--font-round);
+  font-size: clamp(15px, 2vw, 19px);
+  font-weight: 700;
+  box-shadow: var(--shadow-soft);
+  animation: floatY 3.4s ease-in-out 0.6s infinite;
+  white-space: nowrap;
+}
+
+/* ---------- 课程卡片 ---------- */
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: clamp(20px, 3vw, 30px);
+}
+.course-card {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+  border: 3px solid rgba(255,255,255,0.9);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.course-card--live:hover { transform: translateY(-6px); box-shadow: var(--shadow-pop); }
+.course-cover { position: relative; aspect-ratio: 4 / 3; overflow: hidden; }
+.course-cover img { width: 100%; height: 100%; object-fit: cover; }
+.course-card--live .course-cover::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgba(255,249,240,0.9));
+}
+.course-card--soon .course-cover img { filter: grayscale(0.7) opacity(0.75); }
+
+.badge--live { position: absolute; top: 12px; left: 12px; z-index: 2; background: var(--coral); color: #fff; }
+.badge--soon { position: absolute; top: 12px; left: 12px; z-index: 2; background: rgba(255,255,255,0.92); color: var(--ink-soft); }
+
+.course-body { padding: clamp(18px, 2.6vw, 26px); display: flex; flex-direction: column; gap: 12px; flex: 1; }
+.course-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.badge--lavender { background: var(--lavender); color: #fff; }
+.badge--sky { background: var(--sky); color: #fff; }
+.badge--butter { background: var(--butter); color: var(--ink); }
+.badge--pink { background: var(--pink); color: var(--ink); }
+.btn--mint-solid { background: var(--mint-deep); }
+.course-desc { color: var(--ink-soft); font-size: clamp(14px, 1.9vw, 16px); flex: 1; }
+.course-actions { display: flex; gap: 12px; margin-top: 4px; }
+
+/* ---------- 理念卡 ---------- */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: clamp(18px, 2.6vw, 28px);
+}
+.feature-icon { font-size: clamp(34px, 5vw, 46px); margin-bottom: 10px; }
+.feature-grid .card p { color: var(--ink-soft); font-size: clamp(14px, 1.9vw, 16px); }
+
+/* ---------- 平板适配 ---------- */
+@media (max-width: 860px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-mascot { min-height: 250px; order: -1; }
+  .speech-bubble { bottom: 0; }
+}
+@media (max-width: 560px) {
+  .nav-links { margin-left: 0; width: 100%; justify-content: flex-start; }
+  .speech-bubble { white-space: normal; }
+}

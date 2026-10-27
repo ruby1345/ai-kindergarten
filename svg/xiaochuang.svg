@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <defs>
+    <style>
+      .antenna-bob { animation: bob 2.2s ease-in-out infinite; transform-origin: 100px 30px; }
+      .eye-blink { animation: blink 4.2s infinite; transform-origin: center; }
+      .arm-up { animation: armUp 1.2s ease-in-out infinite; transform-origin: 34px 140px; }
+      .spark-pulse { animation: sparkPulse 1.6s ease-in-out infinite; transform-origin: center; }
+      @keyframes bob { 0%,100% { transform: rotate(0deg); } 50% { transform: rotate(-9deg); } }
+      @keyframes blink { 0%,90%,100% { transform: scaleY(1); } 94% { transform: scaleY(0.12); } }
+      @keyframes armUp { 0%,100% { transform: rotate(0deg); } 50% { transform: rotate(-24deg); } }
+      @keyframes sparkPulse { 0%,100% { opacity: 0.55; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.15); } }
+    </style>
+
+    <!-- 基础身体部件（各表情态共用） -->
+    <g id="xc-base">
+      <g class="antenna-bob">
+        <rect x="96" y="5" width="8" height="24" rx="4" fill="#52BFA0"/>
+        <circle cx="100" cy="5" r="8" fill="#FF7A5C"/>
+      </g>
+      <rect x="52" y="26" width="96" height="86" rx="38" fill="#7ED6B6" stroke="#52BFA0" stroke-width="4"/>
+      <circle cx="66" cy="82" r="7.5" fill="#FFC7D1"/>
+      <circle cx="134" cy="82" r="7.5" fill="#FFC7D1"/>
+      <rect x="58" y="118" width="84" height="64" rx="26" fill="#B7E7D3" stroke="#52BFA0" stroke-width="4"/>
+      <circle cx="100" cy="148" r="15" fill="#FFE8A3" stroke="#FFD97A" stroke-width="3"/>
+      <rect x="50" y="182" width="32" height="15" rx="7.5" fill="#3D4351"/>
+      <rect x="118" y="182" width="32" height="15" rx="7.5" fill="#3D4351"/>
+    </g>
+
+    <symbol id="xc-happy" viewBox="0 0 200 200">
+      <use href="#xc-base"/>
+      <g class="eye-blink">
+        <circle cx="82" cy="66" r="9.5" fill="#3D4351"/>
+        <circle cx="118" cy="66" r="9.5" fill="#3D4351"/>
+      </g>
+      <circle cx="85" cy="62.5" r="3.2" fill="#fff"/>
+      <circle cx="121" cy="62.5" r="3.2" fill="#fff"/>
+      <path d="M87 93 Q100 105 113 93" fill="none" stroke="#3D4351" stroke-width="5" stroke-linecap="round"/>
+      <rect x="34" y="128" width="19" height="36" rx="9.5" fill="#7ED6B6" stroke="#52BFA0" stroke-width="3"/>
+      <rect x="147" y="128" width="19" height="36" rx="9.5" fill="#7ED6B6" stroke="#52BFA0" stroke-width="3"/>
+    </symbol>
+
+    <symbol id="xc-waving" viewBox="0 0 200 200">
+      <use href="#xc-base"/>
+      <g class="eye-blink">
+        <circle cx="82" cy="66" r="9.5" fill="#3D4351"/>
+        <circle cx="118" cy="66" r="9.5" fill="#3D4351"/>
+      </g>
+      <circle cx="85" cy="62.5" r="3.2" fill="#fff"/>
+      <circle cx="121" cy="62.5" r="3.2" fill="#fff"/>
+      <path d="M87 93 Q100 105 113 93" fill="none" stroke="#3D4351" stroke-width="5" stroke-linecap="round"/>
+      <rect x="147" y="128" width="19" height="36" rx="9.5" fill="#7ED6B6" stroke="#52BFA0" stroke-width="3"/>
+      <g class="arm-up">
+        <rect x="30" y="116" width="20" height="44" rx="10" fill="#7ED6B6" stroke="#52BFA0" stroke-width="3"/>
+        <circle cx="40" cy="116" r="9" fill="#52BFA0"/>
+      </g>
+    </symbol>
+
+    <symbol id="xc-curious" viewBox="0 0 200 200">
+      <use href="#xc-base"/>
+      <g class="eye-blink">
+        <circle cx="82" cy="66" r="13" fill="#3D4351"/>
+        <circle cx="118" cy="66" r="13" fill="#3D4351"/>
+      </g>
+      <circle cx="86" cy="61" r="4.2" fill="#fff"/>
+      <circle cx="122" cy="61" r="4.2" fill="#fff"/>
+      <ellipse cx="100" cy="99" rx="8.5" ry="10" fill="#3D4351"/>
+      <rect x="34" y="128" width="19" height="36" rx="9.5" fill="#7ED6B6" stroke="#52BFA0" stroke-width="3"/>
+      <rect x="147" y="128" width="19" height="36" rx="9.5" fill="#7ED6B6" stroke="#52BFA0" stroke-width="3"/>
+    </symbol>
+
+    <symbol id="xc-clap" viewBox="0 0 200 200">
+      <use href="#xc-base"/>
+      <g class="eye-blink">
+        <path d="M73 61 Q82 52 91 61" fill="none" stroke="#3D4351" stroke-width="6" stroke-linecap="round"/>
+        <path d="M109 61 Q118 52 127 61" fill="none" stroke="#3D4351" stroke-width="6" stroke-linecap="round"/>
+      </g>
+      <path d="M87 93 Q100 105 113 93" fill="none" stroke="#3D4351" stroke-width="5" stroke-linecap="round"/>
+      <g class="arm-up">
+        <rect x="24" y="102" width="21" height="46" rx="10.5" fill="#7ED6B6" stroke="#52BFA0" stroke-width="3"/>
+      </g>
+      <g class="arm-up">
+        <rect x="155" y="102" width="21" height="46" rx="10.5" fill="#7ED6B6" stroke="#52BFA0" stroke-width="3"/>
+      </g>
+    </symbol>
+
+    <symbol id="star-spark" viewBox="0 0 40 40">
+      <path class="spark-pulse" d="M20 2 L24 15 L37 19 L24 23 L20 38 L16 23 L3 19 L16 15 Z" fill="#FFD97A"/>
+    </symbol>
+  </defs>
+</svg>

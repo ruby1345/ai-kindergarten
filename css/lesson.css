@@ -1,0 +1,51 @@
+/* ============================================================
+   lesson.css — 详细教案页（老师用，打印友好）
+   ============================================================ */
+
+.lesson-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+}
+.meta-item { display: flex; flex-direction: column; gap: 4px; }
+.meta-item b { font-family: var(--font-round); color: var(--ink-soft); font-size: clamp(13px, 1.7vw, 15px); }
+.meta-item span { font-size: clamp(15px, 2vw, 18px); font-weight: 700; }
+
+.goal-list { display: flex; flex-direction: column; gap: 12px; }
+.goal-list li { font-size: clamp(15px, 2vw, 17px); padding-left: 28px; position: relative; }
+.goal-list li::before { content: "✦"; position: absolute; left: 2px; color: var(--coral-deep); }
+.goal-list b { font-family: var(--font-round); }
+
+/* 逐环节教案 */
+.lesson-step { margin-bottom: clamp(20px, 3vw, 28px); scroll-margin-top: 90px; display: flex; flex-direction: column; gap: 14px; }
+.lesson-step.step-key { border: 4px solid rgba(255, 122, 92, 0.45); }
+.step-head { display: flex; align-items: center; gap: 16px; }
+.step-no {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: var(--mint-deep);
+  color: #fff;
+  font-family: var(--font-round);
+  font-size: 24px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.step-key .step-no { background: var(--coral); }
+.step-sec { font-size: clamp(14px, 1.9vw, 17px); color: var(--ink); }
+.step-sec b { font-family: var(--font-round); }
+.step-script {
+  background: rgba(255, 249, 240, 0.7);
+  border-left: 5px solid var(--butter-deep);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.step-script p { color: var(--ink); }
+
+/* 反思栏 */
+.reflection { display: flex; flex-direction: column; gap: 16px; }
+.reflection-line { font-size: clamp(15px, 2vw, 17px); border-bottom: 2px dashed rgba(106, 114, 132, 0.3); padding-bottom: 26px; }
